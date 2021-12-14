@@ -14,16 +14,16 @@ int main()
 {
     pid_t id1, id2;
     int fd, pi[2];
-    char c, d, e;
-    fd = open("/home/anshul/Downloads/dictionary.txt", O_RDONLY);
+    char c, d, e, f;
+    fd = open("/usr/share/dictionary.txt", O_RDONLY);
     if (fd == -1)
     {
         printf("Error: dictionary.txt does not exist.\n");
         exit(0);
     }
     pipe(pi);
-    id1 = fork();
-    id2 = fork();
+    id1 = fork();    // creating child process 1
+    id2 = fork();    // creating child process 2
 
     if(id1 == 0)
     {
@@ -44,10 +44,11 @@ int main()
         close(pi[1]);
         read(pi[0], &d, 1);
         do{
-            read(fd, &e, 1);
-            if(e == d)
+            read(fd, &f, 1);
+            if(f == d)
             {
                 printf("found %c = %c", d ,e);
+                break;
             }
         }while(e != EOF);
     }
@@ -58,5 +59,6 @@ int main()
         fscanf(stdin, "%c", &c);
         write(pi[1], &c, 1);
     }
+    close(fd);
 return 0;
 }
